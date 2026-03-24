@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ulivo DC — Website Feedback</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #2c3e6b;
+            --navy-light: #3d5089;
+            --cream: #f5f0e8;
+            --warm-white: #faf8f5;
+            --gold: #c9a96e;
+            --green: #4a7c59;
+            --green-light: #e8f0ea;
+            --text: #2d2d2d;
+            --text-light: #666;
+            --orange: #d4854a;
+            --orange-light: #fdf3eb;
+            --red-light: #fceaea;
+            --red: #c0392b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--warm-white);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Hero */
+        .hero {
+            background: var(--navy);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(44,62,107,0.95), rgba(61,80,137,0.9));
+        }
+        .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+        .hero-label {
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 400;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .hero p {
+            font-size: 18px;
+            opacity: 0.8;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto 24px;
+        }
+        .hero-meta {
+            font-size: 14px;
+            opacity: 0.5;
+        }
+
+        /* Overall summary */
+        .summary {
+            max-width: 900px;
+            margin: -40px auto 0;
+            padding: 40px 48px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            position: relative;
+            z-index: 2;
+        }
+        .summary h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            margin-bottom: 16px;
+            color: var(--navy);
+        }
+        .summary p {
+            color: var(--text-light);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .tone-note {
+            margin-top: 24px;
+            padding: 16px 20px;
+            background: var(--green-light);
+            border-left: 3px solid var(--green);
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: var(--green);
+        }
+
+        /* Section */
+        .section {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 24px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .section-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--navy);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: var(--navy);
+        }
+
+        /* Feedback card */
+        .feedback-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            margin-bottom: 32px;
+        }
+        .feedback-card-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+        .feedback-card-inner.reverse {
+            direction: rtl;
+        }
+        .feedback-card-inner.reverse > * {
+            direction: ltr;
+        }
+        .feedback-visual {
+            position: relative;
+            min-height: 400px;
+            overflow: hidden;
+        }
+        .feedback-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .feedback-visual iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: none;
+        }
+        .callout-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+        }
+        .callout-dot {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(212,133,74,0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 2px 8px rgba(212,133,74,0.4); }
+            50% { box-shadow: 0 2px 16px rgba(212,133,74,0.7); }
+        }
+
+        .feedback-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .feedback-area-label {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .feedback-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--navy);
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        /* Feedback items */
+        .feedback-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .feedback-item.observation {
+            background: #f0f4ff;
+            border-left: 3px solid var(--navy-light);
+        }
+        .feedback-item.suggestion {
+            background: var(--green-light);
+            border-left: 3px solid var(--green);
+        }
+        .feedback-item.quick-win {
+            background: var(--orange-light);
+            border-left: 3px solid var(--orange);
+        }
+        .feedback-item-icon {
+            flex-shrink: 0;
+            font-size: 16px;
+            margin-top: 1px;
+        }
+        .feedback-item-text { flex: 1; }
+        .feedback-item-label {
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .feedback-item.observation .feedback-item-label { color: var(--navy-light); }
+        .feedback-item.suggestion .feedback-item-label { color: var(--green); }
+        .feedback-item.quick-win .feedback-item-label { color: var(--orange); }
+
+        /* Full-width feedback card */
+        .feedback-card-full {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            margin-bottom: 32px;
+        }
+        .feedback-card-full .visual-strip {
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+        .feedback-card-full .visual-strip img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+        .feedback-card-full .content-area {
+            padding: 40px;
+        }
+
+        /* Legend */
+        .legend {
+            max-width: 900px;
+            margin: 0 auto 40px;
+            padding: 24px 32px;
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        .legend-dot.obs { background: var(--navy-light); }
+        .legend-dot.sug { background: var(--green); }
+        .legend-dot.qw { background: var(--orange); }
+
+        /* Priority matrix */
+        .priority-section {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 24px;
+        }
+        .priority-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 32px;
+        }
+        .priority-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        }
+        .priority-card h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid;
+        }
+        .priority-card.immediate h4 { color: var(--orange); border-color: var(--orange); }
+        .priority-card.short h4 { color: var(--navy); border-color: var(--navy); }
+        .priority-card.medium h4 { color: var(--green); border-color: var(--green); }
+        .priority-card.consider h4 { color: var(--text-light); border-color: #ddd; }
+
+        .priority-list {
+            list-style: none;
+        }
+        .priority-list li {
+            padding: 8px 0;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .priority-list li:last-child { border: none; }
+        .priority-list li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-top: 7px;
+            flex-shrink: 0;
+        }
+        .priority-card.immediate .priority-list li::before { background: var(--orange); }
+        .priority-card.short .priority-list li::before { background: var(--navy); }
+        .priority-card.medium .priority-list li::before { background: var(--green); }
+        .priority-card.consider .priority-list li::before { background: #ccc; }
+
+        /* Footer */
+        .footer {
+            background: var(--navy);
+            color: white;
+            text-align: center;
+            padding: 48px 24px;
+            margin-top: 80px;
+        }
+        .footer p { opacity: 0.6; font-size: 14px; }
+
+        /* Screenshot placeholder */
+        .screenshot-frame {
+            background: #e8e5df;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .screenshot-frame img {
+            width: 100%;
+            display: block;
+        }
+        .screenshot-label {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .feedback-card-inner { grid-template-columns: 1fr; }
+            .feedback-card-inner.reverse { direction: ltr; }
+            .priority-grid { grid-template-columns: 1fr; }
+            .summary { margin: -20px 16px 0; padding: 24px; }
+        }
+
+        /* Divider */
+        .divider {
+            max-width: 900px;
+            margin: 0 auto;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ddd, transparent);
+        }
+
+        .inline-note {
+            background: #fffbe6;
+            border: 1px solid #f0e6b8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #8a7630;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="hero-content">
+        <div class="hero-label">Website Review</div>
+        <h1>Ulivo DC</h1>
+        <p>Constructive feedback and suggestions to elevate the digital experience to match the quality of the restaurant itself.</p>
+        <div class="hero-meta">March 24, 2026 &middot; ulivodc.com</div>
+    </div>
+</div>
+
+<!-- Summary -->
+<div class="summary">
+    <h2>Overall Impression</h2>
+    <p>The Ulivo DC website has a solid foundation with beautiful photography and good content structure. The core elements are all there — hero imagery, menu access, press coverage, and contact info. The suggestions below are focused on refinements that will bring the digital experience up to the same elevated level as the restaurant itself. These are meant to polish what's already working, not start over.</p>
+    <div class="tone-note">
+        <strong>Note:</strong> This feedback is presented as suggestions and opportunities — the site is functional and communicates the brand. These are refinements to take it to the next level.
+    </div>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+    <div class="legend-item"><div class="legend-dot obs"></div> Observation</div>
+    <div class="legend-item"><div class="legend-dot sug"></div> Suggestion</div>
+    <div class="legend-item"><div class="legend-dot qw"></div> Quick Win</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 1: Hero & First Impression -->
+<div class="section">
+    <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">Hero &amp; First Impression</h2>
+    </div>
+
+    <div class="feedback-card">
+        <div class="feedback-card-inner">
+            <div class="feedback-visual">
+                <div class="screenshot-frame" style="height:100%">
+                    <img src="screenshots/HERO%20image%20Ulivo_Credit_NinaPalazzolo-147-3.webp" alt="Hero area screenshot" style="object-position:center;">
+                    <div class="callout-overlay">
+                        <div class="callout-dot" style="top:15px;left:48%;font-size:11px;">A</div>
+                        <div class="callout-dot" style="top:12px;right:80px;font-size:11px;">B</div>
+                    </div>
+                    <div class="screenshot-label">Homepage — Hero</div>
+                </div>
+            </div>
+            <div class="feedback-content">
+                <div class="feedback-area-label">Hero Section</div>
+                <div class="feedback-heading">Add hero text overlay &amp; a dark image treatment</div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-icon">A</div>
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        Add "Elevated Neighborhood Italian" as large hero text over the image, with a dark overlay similar to the photo section above the footer. Include a "Make a Reservation" call-to-action button underneath — that's the primary action visitors want to take.
+                    </div>
+                </div>
+
+                <div class="feedback-item observation">
+                    <div class="feedback-item-icon">B</div>
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Observation</div>
+                        The hero image may appear slightly soft on desktop. It's worth checking that the source image is high resolution enough for large screens. It likely looks fine on mobile, but double-check.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 2: Navigation -->
+<div class="section">
+    <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Navigation</h2>
+    </div>
+
+    <div class="feedback-card">
+        <div class="feedback-card-inner reverse">
+            <div class="feedback-visual">
+                <div class="screenshot-frame" style="height:100%">
+                    <img src="screenshots/Screenshot%202026-03-24%20at%203.41.48%20PM.png" alt="Navigation - Inspired by Italy section" style="object-position:top;">
+                    <div class="screenshot-label">Navigation Bar</div>
+                </div>
+            </div>
+            <div class="feedback-content">
+                <div class="feedback-area-label">Navigation Bar</div>
+                <div class="feedback-heading">Streamline the navigation links</div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        Remove "Home" from the nav — the logo already serves that purpose. Replace with more useful links: <strong>Menus, Press, Reservations</strong>, and optionally <strong>Location</strong>. Even if Reservations links to an external platform, having it in the nav is a convention visitors expect.
+                    </div>
+                </div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        Consider making the logo larger. The text-only "ULIVO" in the nav is understated — using the actual logo from the storefront signage or the version on the restaurant's windows could add more brand presence.
+                    </div>
+                </div>
+
+                <div class="feedback-item observation">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Observation</div>
+                        Consider adding an "About" or "Our Story" page using the "Built for the Neighborhood" content. This would give the site more depth and give people something to browse, plus it would reduce the amount of text on the homepage.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 3: Menu & Content Section -->
+<div class="section">
+    <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Menu Section &amp; Content Cards</h2>
+    </div>
+
+    <div class="feedback-card">
+        <div class="feedback-card-inner">
+            <div class="feedback-visual">
+                <div class="screenshot-frame" style="height:100%">
+                    <img src="screenshots/Screenshot%202026-03-24%20at%203.41.52%20PM.png" alt="Menu section - Elevated Italian">
+                    <div class="screenshot-label">Elevated Italian Section</div>
+                </div>
+            </div>
+            <div class="feedback-content">
+                <div class="feedback-area-label">Mid-Page Content</div>
+                <div class="feedback-heading">Separate the menu buttons and make food images larger</div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        The "Full Menu" and "Wine List" buttons could benefit from more visual separation from the "Elevated Neighborhood Italian" tagline. Consider placing them in their own section with a contrasting background (dark background with white buttons) to create a visual break.
+                    </div>
+                </div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        The three food images (The Food, The Experience, The Space) are a great feature — make them larger. People come to a restaurant site to see the food front and center. Let these images be the star of the page.
+                    </div>
+                </div>
+
+                <div class="feedback-item quick-win">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Quick Win</div>
+                        Consider embedding the menus on the site rather than linking to PDF downloads. PDF downloads feel less polished. If that's too much work, at minimum ensure the PDFs open in a new tab.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 4: Copy & Content -->
+<div class="section">
+    <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Copy &amp; Content</h2>
+    </div>
+
+    <div class="feedback-card">
+        <div class="feedback-card-inner reverse">
+            <div class="feedback-visual">
+                <div class="screenshot-frame" style="height:100%">
+                    <img src="screenshots/Screenshot%202026-03-24%20at%203.41.55%20PM.png" alt="Built for the Neighborhood section">
+                    <div class="screenshot-label">Built for the Neighborhood</div>
+                </div>
+            </div>
+            <div class="feedback-content">
+                <div class="feedback-area-label">Body Copy</div>
+                <div class="feedback-heading">Tighten up the text &amp; fix a few details</div>
+
+                <div class="feedback-item quick-win">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Quick Win</div>
+                        Remove the em dashes (—) throughout the body copy. They're a common tell of AI-generated text and stand out to readers who notice these patterns. Replace with periods or commas.
+                    </div>
+                </div>
+
+                <div class="feedback-item quick-win">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Quick Win</div>
+                        In "The Space" card, the word "cliches" needs an accent (clichés), and the word itself may trip up readers. Consider replacing with an alternative like "stereotypes" or "conventions."
+                    </div>
+                </div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        The "Built for the Neighborhood" section has about four paragraphs of text — that's a lot for a homepage. Consider shortening it to 1–2 paragraphs and moving the full story to a dedicated "About" page. People tend to skim homepages.
+                    </div>
+                </div>
+
+                <div class="feedback-item observation">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Observation</div>
+                        The body text on desktop feels slightly small. A small bump in font size would improve readability and give the content more visual weight.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 5: Press Page -->
+<div class="section">
+    <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Press Page</h2>
+    </div>
+
+    <div class="feedback-card">
+        <div class="feedback-card-inner">
+            <div class="feedback-visual">
+                <div class="screenshot-frame" style="height:100%">
+                    <img src="screenshots/Screenshot%202026-03-24%20at%203.42.22%20PM.png" alt="Press page screenshot">
+                    <div class="screenshot-label">Press Page</div>
+                </div>
+            </div>
+            <div class="feedback-content">
+                <div class="feedback-area-label">Press / Contact</div>
+                <div class="feedback-heading">Strengthen the social proof &amp; layout</div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        The press article images don't relate to the articles themselves. Instead, use small thumbnails or screenshots of the actual articles showing the Eater, Fox 5, Washingtonian, and DC News Now logos/mastheads. This adds credibility and visual recognition.
+                    </div>
+                </div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        The current one-per-row layout takes up a lot of vertical space. Consider a 2-column grid — each article as a compact card with the publication logo, a quote snippet, and a link. This would look more like a proper press kit.
+                    </div>
+                </div>
+
+                <div class="feedback-item quick-win">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Quick Win</div>
+                        All press article links should open in a new tab (<code>target="_blank"</code>). Currently, clicking "Read Here" takes people away from the site entirely.
+                    </div>
+                </div>
+
+                <div class="feedback-item observation">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Observation</div>
+                        The page says "Contact" at the top but functions as a press page. Consider making a dedicated Contact page with the map, phone number, and hours — and keeping this page focused on press mentions.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Press example cards -->
+    <div style="background:white;border-radius:16px;padding:32px 40px;box-shadow:0 2px 16px rgba(0,0,0,0.06);margin-top:8px;">
+        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:8px;">Example — What Press Cards Could Look Like</div>
+        <p style="font-size:14px;color:var(--text-light);margin-bottom:24px;">Using actual article screenshots with publication mastheads adds instant credibility and visual recognition. Here's what the Eater and Washingtonian features look like as thumbnails:</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div style="border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.1);border:1px solid #eee;">
+                <img src="screenshots/eater%20screenshot.png" alt="Eater DC article" style="width:100%;display:block;height:220px;object-fit:cover;object-position:top;">
+                <div style="padding:16px 18px;background:white;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                        <div style="font-size:12px;font-weight:700;color:#c0392b;text-transform:uppercase;letter-spacing:1px;">Eater DC</div>
+                        <div style="font-size:11px;color:#999;">Feb 24, 2026</div>
+                    </div>
+                    <div style="font-size:15px;font-weight:600;line-height:1.4;color:var(--text);">A Columbia Heights Corner Gets a Dreamy Italian Reboot</div>
+                    <div style="font-size:12px;color:var(--text-light);margin-top:6px;line-height:1.5;">Ulivo's first-time owner starts with a clean slate in a familiar space.</div>
+                </div>
+            </div>
+            <div style="border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.1);border:1px solid #eee;">
+                <img src="screenshots/Washingtonian.png" alt="Washingtonian article" style="width:100%;display:block;height:220px;object-fit:cover;object-position:top;">
+                <div style="padding:16px 18px;background:white;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                        <div style="font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:1px;">Washingtonian</div>
+                        <div style="font-size:11px;color:#999;">Feb 26, 2026</div>
+                    </div>
+                    <div style="font-size:15px;font-weight:600;line-height:1.4;color:var(--text);">Nothing Is More Than $30 at This New DC Italian Restaurant</div>
+                    <div style="font-size:12px;color:var(--text-light);margin-top:6px;line-height:1.5;">Ulivo opens in Park View from a first-time restaurateur.</div>
+                </div>
+            </div>
+        </div>
+        <p style="font-size:12px;color:#aaa;margin-top:16px;font-style:italic;">This 2-column card layout with article thumbnails would replace the current full-width quote blocks on the press page.</p>
+    </div>
+</div>
+
+<!-- SECTION 6: Branding & Footer -->
+<div class="section">
+    <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Branding &amp; Footer</h2>
+    </div>
+
+    <div class="feedback-card">
+        <div class="feedback-card-inner reverse">
+            <div class="feedback-visual">
+                <div class="screenshot-frame" style="height:100%">
+                    <img src="screenshots/Screenshot%202026-03-24%20at%203.42.08%20PM.png" alt="Footer screenshot">
+                    <div class="screenshot-label">Footer</div>
+                </div>
+            </div>
+            <div class="feedback-content">
+                <div class="feedback-area-label">Footer &amp; Branding</div>
+                <div class="feedback-heading">Clean up the footer and align branding</div>
+
+                <div class="feedback-item quick-win">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Quick Win</div>
+                        Remove "Created for free using WordPress and Colibri" from the footer. This isn't relevant to restaurant visitors and undermines the elevated feel of the brand.
+                    </div>
+                </div>
+
+                <div class="feedback-item quick-win">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Quick Win</div>
+                        The "© 2026" copyright line can also be removed — it's not legally required and adds unnecessary clutter.
+                    </div>
+                </div>
+
+                <div class="feedback-item observation">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Observation</div>
+                        There's a slight disconnect between the branding on the website (the text-only "ULIVO" nav logo) versus what's on the physical storefront and Instagram. Consider aligning these to use the same logo treatment for consistency.
+                    </div>
+                </div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        The fonts used (Italiana and Didact Gothic) may differ from the actual brand fonts on the menus and signage. It's worth confirming and aligning the typography across all touchpoints.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 7: Photography & Imagery -->
+<div class="section">
+    <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">Photography &amp; Imagery</h2>
+    </div>
+
+    <div class="feedback-card">
+        <div class="feedback-card-inner">
+            <div class="feedback-visual">
+                <div class="screenshot-frame" style="height:100%">
+                    <img src="screenshots/Screenshot%202026-03-24%20at%203.42.04%20PM.png" alt="Walk-ins and imagery section">
+                    <div class="screenshot-label">Photography</div>
+                </div>
+            </div>
+            <div class="feedback-content">
+                <div class="feedback-area-label">Visual Content</div>
+                <div class="feedback-heading">Let the photography do the heavy lifting</div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        The professional photos are a real asset. Make them bigger throughout the site. People aren't afraid to scroll — let them enjoy large, beautiful food and space imagery. This is one of the biggest opportunities to elevate the feel of the site.
+                    </div>
+                </div>
+
+                <div class="feedback-item suggestion">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Suggestion</div>
+                        On the press page, consider adding a downloadable media kit — logos, high-res images — so journalists or bloggers featuring Ulivo can grab assets easily. This is a nice professional touch.
+                    </div>
+                </div>
+
+                <div class="feedback-item observation">
+                    <div class="feedback-item-text">
+                        <div class="feedback-item-label">Observation</div>
+                        The images below the "Food / Experience / Space" cards don't directly correspond to their headings (e.g., the parmesan photo is under "The Food" but could be under any category). If possible, match images more closely to their section content.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Priority Matrix -->
+<div class="priority-section">
+    <div class="section-header" style="justify-content:center;margin-bottom:8px;">
+        <h2 class="section-title">Suggested Priority</h2>
+    </div>
+    <p style="text-align:center;color:var(--text-light);margin-bottom:32px;font-size:15px;">A suggested order of operations, from quick wins to bigger improvements.</p>
+
+    <div class="priority-grid">
+        <div class="priority-card immediate">
+            <h4>Quick Wins (Same Day)</h4>
+            <ul class="priority-list">
+                <li>Remove "Created for free using WordPress and Colibri" from footer</li>
+                <li>Remove the © 2026 copyright line</li>
+                <li>Remove em dashes from body copy</li>
+                <li>Fix "cliches" → "clichés" or swap the word</li>
+                <li>Make press links open in new tabs</li>
+            </ul>
+        </div>
+        <div class="priority-card short">
+            <h4>Short Term (This Week)</h4>
+            <ul class="priority-list">
+                <li>Add dark overlay + hero text to main image</li>
+                <li>Add "Make a Reservation" CTA to hero</li>
+                <li>Update navigation: Menus, Press, Reservations</li>
+                <li>Increase body text size slightly</li>
+                <li>Check hero image resolution for desktop</li>
+            </ul>
+        </div>
+        <div class="priority-card medium">
+            <h4>Medium Term (This Month)</h4>
+            <ul class="priority-list">
+                <li>Enlarge food/experience/space images</li>
+                <li>Separate menu buttons into their own section</li>
+                <li>Redesign press page with 2-col grid + publication logos</li>
+                <li>Shorten "Built for the Neighborhood" on homepage</li>
+                <li>Create a separate Contact page</li>
+            </ul>
+        </div>
+        <div class="priority-card consider">
+            <h4>Consider (Future)</h4>
+            <ul class="priority-list">
+                <li>Add dedicated "About / Our Story" page</li>
+                <li>Embed menus on-site instead of PDF links</li>
+                <li>Add downloadable press kit / media assets</li>
+                <li>Align logo and typography with physical branding</li>
+                <li>Enlarge logo in navigation</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>Prepared for Ulivo DC &middot; March 2026</p>
+</div>
+
+</body>
+</html>
